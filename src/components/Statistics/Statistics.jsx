@@ -1,21 +1,36 @@
 import PropTypes from 'prop-types';
 import styles from './Statistics.module.css';
-const Statistics = ({ good, neutral, bad, total, positivePercentage }) => {
+
+export const Statistics = ({ title, stats }) => {
   return (
-    <div>
-      <p className={styles.text}>good:{good}</p>
-      <p className={styles.text}>neutral:{neutral}</p>
-      <p className={styles.text}>bad:{bad}</p>
-      <p className={styles.text}>Total: {total}</p>
-      <p className={styles.text}>Positive feedback: {positivePercentage}%</p>
-    </div>
+    <section className={styles.statistics}>
+      {title && <h2 className={styles.title}>{title}</h2>}
+
+      <ul className={styles.statList}>
+        {stats.map(({ id, label, percentage }) => (
+          <li
+            className={styles.item}
+            key={id}
+            style={{ backgroundColor: `#${randomColorFunc()}` }}
+          >
+            <span className={styles.label}>{label}</span>
+            <span className={styles.percentage}>{percentage}%</span>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 };
-Statistics.prototype = {
-  good: PropTypes.number.isRequired,
-  neutral: PropTypes.number.isRequired,
-  bad: PropTypes.number.isRequired,
-  total: PropTypes.number.isRequired,
-  positivePercentage: PropTypes.number.isRequired,
+function randomColorFunc() {
+  return Math.floor(Math.random() * 16777215).toString(16);
+}
+Statistics.propTypes = {
+  title: PropTypes.string,
+  stats: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      percentage: PropTypes.number.isRequired,
+    })
+  ),
 };
-export default Statistics;
